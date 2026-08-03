@@ -1,0 +1,12 @@
+# environment
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# generated artifacts — every one of these is reproduced by the scripts
+# (see "Quickstart from a fresh clone" in README.md)
+data/sample_agreement.pdf
+data/sample_agreement.md
+01_pdf_parsing/out_plain.txt
+02_rag/chroma_db/

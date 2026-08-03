@@ -1,0 +1,9 @@
+# Tier-1 legaltech hackathon practice stack.
+# Versions verified working together on 2026-07-12 (python 3.11.15):
+#   pymupdf4llm 1.28.0 · chromadb 1.5.9 · anthropic 0.116.0
+#   pydantic 2.13.4 · fpdf2 2.8.7
+pymupdf4llm     # PDF -> structured markdown (pulls in pymupdf)
+chromadb        # local vector DB with built-in embedding (no API key needed)
+anthropic       # Claude SDK for structured outputs + tool use
+pydantic        # schema-first structured outputs
+fpdf2           # only used to generate the sample contract PDF
