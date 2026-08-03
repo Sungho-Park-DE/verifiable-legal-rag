@@ -1,8 +1,10 @@
-# 15 project scenarios, judged and ranked
+# 18 project scenarios, judged and ranked
 
-Generated through five persona lenses (small law firm · citizen/A2J ·
-court/public sector · company compliance · legal-AI infrastructure),
-each scenario anchored to specific findings in [doc 05](05-gap-analysis.md).
+Fifteen scenarios generated through five persona lenses (small law firm
+· citizen/A2J · court/public sector · company compliance · legal-AI
+infrastructure), plus a three-scenario addendum through a sixth lens
+(litigation/argument analysis + simulation — see end of this doc), each
+anchored to specific findings in [doc 05](05-gap-analysis.md).
 Scored by a simulated judge panel (legaltech VC + law-firm innovation
 partner + CS professor) on five 1–5 axes: feasibility, novelty,
 demoability, data availability, judge appeal (max 25).
@@ -451,6 +453,151 @@ version of it; edge cases must escalate honestly to "lawyer review
 needed".
 
 ---
+
+## Addendum (Aug 2026): litigation / argument-analysis + simulation lens
+
+The archetype that took Cambridge 2025's top prizes (CounterClaim
+Eagle: LLM agents + Monte-Carlo litigation simulation; Dialogue AI:
+adversarial model instances; No Human Intelligence: calibrated
+settle-vs-litigate estimation) was missing from the original five
+lenses. Three scenarios, scored by the same panel rubric against the
+same calibration anchors. The German twist that unlocks this lens
+despite the <1% judgment-publication rate: **litigation costs in
+Germany are fully statutory** (RVG attorney fees, GKG court fees,
+loser-pays §91 ZPO, partial quotas §92 ZPO) — the cost side of every
+litigation decision tree is computable to the cent with zero case data.
+
+| Score | Scenario | One-line verdict |
+|---|---|---|
+| 21 | Kostenkompass | Makes the user own the probabilities (defeats calibration failure by design); must out-differentiate free RVG calculators |
+| 21 | Korridor | Strongest 90-second demo of the three (§12a ArbGG reveal); corridor priors are folklore+statistics, not prediction |
+| 20 | Gegenwind | Most novel of all 18; element extraction sits exactly on the measured multi-step-reasoning bottleneck |
+
+Revised bands: 22 = BescheidCheck · FristSchutz · LexZeit; 21 now also
+contains Kostenkompass (top of band) and Korridor (above Fristklar);
+Gegenwind enters at the top of the 20 band.
+
+### 16. Kostenkompass — settle-or-sue Monte-Carlo on statutory cost tables (21)
+
+**Problem.** "Should I take the settlement offer or sue?" is answered
+by gut feeling, even though Germany's loser-pays rule plus statutory
+fee schedules make the cost side of the decision fully deterministic
+per instance — attorney fees (RVG), court fees (GKG), appeal, partial-
+win cost quotas (§92 ZPO), PKH and legal-insurance overlays.
+
+**Gap anchor.** Litigation-analytics whitespace blocked at the
+outcome-data layer — but the cost layer needs no case data at all
+(axis 4); duration explosion makes time-discounting material (axis 2
+#4, LG 17.5 months); billable-hour opacity (axis 1 #4); calibration
+failure (axis 3 #10) answered structurally: probabilities are explicit
+user inputs, never model claims.
+
+**Solution & demo.** Deterministic cost engine over the statutory
+tables → Monte-Carlo where the user supplies win-probability ranges
+and settlement quotas → net-outcome distributions for accept / sue /
+sue-then-settle, plus the sensitivity flip point. Demo: live sliders —
+"suing beats the €4,500 offer only if p(win) > 0.62; with a 15-month
+duration, > 0.71". LLM only parses case facts into the claim structure
+and drafts the client memo.
+
+**Data.** RVG/GKG fee tables via gesetze-im-internet XML; Destatis
+duration/settlement statistics as editable priors.
+
+**Trust angle.** Every euro is a statutory table lookup carrying its
+fee-position reference; fixed simulation seeds → reproducible; the
+tool never estimates odds itself.
+
+**Risks.** Cost-model bookkeeping (scope to standard two-party money
+claims); users over-reading the flip point as advice (lawyer-facing
+framing); free RVG calculators exist — the decision layer and
+sensitivity analysis must carry the differentiation.
+
+### 17. Korridor — severance corridor simulator for dismissal settlements (21)
+
+**Problem.** Roughly nine in ten dismissal cases end in settlement,
+negotiated blind by employees — and quoted as folklore (0.5 monthly
+salaries per year of tenure) by lawyers — without netting taxes,
+costs, or the §12a ArbGG surprise: in first-instance labor court you
+pay your own lawyer even if you win.
+
+**Gap anchor.** Dismissal-suit surge +33% and legal-aid supply failure
+(axis 2); calibrated-bounds-not-point-predictions as the answer to
+calibration failure (axis 3 #10); the No Human Intelligence archetype
+(settle-vs-litigate estimation with calibrated outputs) in an A2J
+package.
+
+**Solution & demo.** Compute everything computable deterministically —
+notice period (§622 BGB), the 3-week filing deadline, labor-court cost
+rules incl. §12a ArbGG, net-of-tax via Fünftelregelung arithmetic,
+PKH/Beratungshilfe eligibility — and bound what isn't: a severance
+corridor from the rule-of-thumb baseline modulated by published
+statistics and case factors, every assumption listed and editable;
+Monte-Carlo over corridor + duration. Demo: a judge plays a dismissed
+employee; the flip view lands — "the €12k offer is above your P75 net
+outcome, because §12a ArbGG means your lawyer costs you the same win
+or lose."
+
+**Data.** gesetze-im-internet (KSchG, §622 BGB, §12a ArbGG, EStG),
+labor-court statistics, PKH tables.
+
+**Trust angle.** Deadline, notice period, taxes, and fees are
+deterministic with § anchors; the uncertain part is an explicitly
+bounded corridor with an editable assumptions table — no point
+predictions, no model-claimed probabilities.
+
+**Risks.** Corridor priors are folklore + statistics, not case-level
+prediction — honesty about this is load-bearing; RDG (computation and
+information framing, corridor ≠ advice); overlaps Fristklar's deadline
+module — as a portfolio the two should merge ("Fristklar gets you to
+court, Korridor tells you what to do at the table").
+
+### 18. Gegenwind — adversarial stress-test bench for German briefs (20)
+
+**Problem.** A brief's weaknesses surface at the hearing, when it is
+too late; big firms moot-court, solo practitioners have no sparring
+partner; prompting a chatbot to "attack my brief" produces fluent,
+unanchored noise that a lawyer cannot use.
+
+**Gap anchor.** The Dialogue AI adversarial archetype; multi-step rule
+application as the measured LLM bottleneck (axis 3 #9) → decompose
+into element-level checks; Subsumtion reasoning "assistive, not
+autonomous" (axis 3 #8); misgrounding (axis 3 #1) → every attack must
+carry a verified anchor.
+
+**Solution & demo.** Parse the brief into the German claim structure —
+Anspruchsgrundlage → statutory Tatbestandsmerkmale, a deterministic
+element checklist derived from official XML per claim type — and map
+factual assertions to elements with span provenance. Then N
+adversarial attacker instances per element (deny facts / alternative
+interpretation / counter-authority via RAG / procedural objections),
+where attacks **survive only with a verified anchor**: a statute
+element or a quote-verified case citation, reusing this repo's
+project-04 verifier. Output: an element vulnerability map plus
+surviving verified attacks and shoring suggestions. Scope: two claim
+types (Kündigungsschutzklage, Mieterhöhung — both already in this
+repo's domain). Demo: a brief with one deliberately unsupported
+element lights up; a planted fake counter-citation is dropped by the
+verifier on screen — the trust layer visibly filtering the model's own
+attacks.
+
+**Data.** gesetze-im-internet XML, rechtsprechung-im-internet, Open
+Legal Data.
+
+**Trust angle.** The element checklist is statute-derived; the
+adversarial LLM is subjected to the same deterministic quote-verifier
+as everything else; the coverage map is a per-element evidence table,
+falsifiable by click.
+
+**Risks.** Element extraction and mapping sit exactly on the measured
+multi-step-reasoning bottleneck — the execution risk of the three;
+counter-authority retrieval is thin below federal courts; two claim
+types only (expansion = adding element schemas).
+
+**Panel note.** For an Access-to-Justice-themed hackathon the panel's
+single pick from this lens is **Korridor** — the only one that puts
+the tool directly in the hands of the dismissed employee, and the
+§12a ArbGG moment is exactly the "show a structural injustice the
+audience didn't know about in 90 seconds" genre.
 
 ## Cross-cutting pattern
 

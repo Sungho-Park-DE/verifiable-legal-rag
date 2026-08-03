@@ -13,7 +13,7 @@ source; statistics were verified at research time but age quickly.
 | [03 — Legal data sources](03-legal-data-sources.md) | German/EU open legal data usable within a hackathon weekend |
 | [04 — Target event](04-target-event.md) | Legal Loves Tech 2026 (LMU+TUM) details; Munich Hacking Legal 2026 recap |
 | [05 — Gap analysis](05-gap-analysis.md) | Four-axis bottleneck research: practitioner pain, German structural failures, measured technical limits, market whitespace |
-| [06 — Project scenarios](06-scenarios.md) | 15 generated scenarios with full specs, judged and ranked |
+| [06 — Project scenarios](06-scenarios.md) | 18 generated scenarios with full specs, judged and ranked (5 lenses + litigation-simulation addendum) |
 | [07 — Domain primer](07-domain-primer.md) | EU AI Act, GDPR, RDG, and German court system — the one-day domain kit |
 
 ## How these were produced
