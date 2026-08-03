@@ -15,6 +15,8 @@ source; statistics were verified at research time but age quickly.
 | [05 — Gap analysis](05-gap-analysis.md) | Four-axis bottleneck research: practitioner pain, German structural failures, measured technical limits, market whitespace |
 | [06 — Project scenarios](06-scenarios.md) | 18 generated scenarios with full specs, judged and ranked (5 lenses + litigation-simulation addendum) |
 | [07 — Domain primer](07-domain-primer.md) | EU AI Act, GDPR, RDG, and German court system — the one-day domain kit |
+| [08 — Challenge prediction](08-challenge-prediction.md) | Profiles of both 2026 challenge providers, ranked hypotheses per track, ecosystem taste signals |
+| [09 — Domain fundamentals](09-domain-fundamentals.md) | Consumer-law weapons, justice rails, a subscription-trap case walked end to end, engineer's depth guide |
 
 ## How these were produced
 
