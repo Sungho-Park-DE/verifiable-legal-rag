@@ -26,6 +26,14 @@ output:
 04  trust layer                       (quote-and-verify + native Citations API)
 ```
 
+## Research & preparation docs
+
+[`docs/`](docs/README.md) holds the research this repo grew out of:
+what wins at legaltech hackathons (2024–2026), the mid-2026 stack,
+German/EU open legal data, a four-axis gap analysis of what legal AI
+measurably cannot do, 15 judged project scenarios, and a domain primer
+(EU AI Act · GDPR · RDG · German courts).
+
 ## Quickstart from a fresh clone
 
 Generated artifacts (sample PDF/markdown, vector index) are gitignored —
