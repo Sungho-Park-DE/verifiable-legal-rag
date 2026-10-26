@@ -2,8 +2,10 @@
 # Versions verified working together on 2026-07-12 (python 3.11.15):
 #   pymupdf4llm 1.28.0 · chromadb 1.5.9 · anthropic 0.116.0
 #   pydantic 2.13.4 · fpdf2 2.8.7
-pymupdf4llm     # PDF -> structured markdown (pulls in pymupdf)
-chromadb        # local vector DB with built-in embedding (no API key needed)
-anthropic       # Claude SDK for structured outputs + tool use
-pydantic        # schema-first structured outputs
-fpdf2           # only used to generate the sample contract PDF
+# Pinned to exactly these (2026-10-26): with pymupdf4llm 2.0 one retrieval
+# check in 02_rag failed; with these pins all 50 offline checks pass.
+pymupdf4llm==1.28.0  # PDF -> structured markdown (pulls in pymupdf)
+chromadb==1.5.9      # local vector DB with built-in embedding (no API key needed)
+anthropic==0.116.0   # Claude SDK for structured outputs + tool use
+pydantic==2.13.4     # schema-first structured outputs
+fpdf2==2.8.7         # only used to generate the sample contract PDF
