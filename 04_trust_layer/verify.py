@@ -90,6 +90,31 @@ def offline_verifier_checks() -> None:
     check(f"paraphrase -> quote_not_found (score {v.score:.2f} < {FUZZY_THRESHOLD})",
           v.status == "quote_not_found")
 
+    # high similarity, different meaning: a changed number or a dropped
+    # negation must fail even though the score is above the threshold
+    changed = "written notice of termination at least sixty (60) days"
+    v = verify_quote(changed, term_id, sources)
+    check(f"changed number -> quote_altered (score {v.score:.2f} >= {FUZZY_THRESHOLD})",
+          v.status == "quote_altered" and v.score >= FUZZY_THRESHOLD and not v.ok)
+    digit_only = REAL_QUOTE.replace("(30)", "(60)")
+    check("changed digits only -> quote_altered",
+          verify_quote(digit_only, term_id, sources).status == "quote_altered")
+    cap_quote = "The cap does not apply to damages caused by intent or gross negligence"
+    cap_id = next((c["id"] for c in chunks if cap_quote in c["text"]), None)
+    if cap_id is None:
+        check("sample contract still contains the liability-cap anchor", False)
+    else:
+        dropped = cap_quote.replace("does not apply", "does apply")
+        v = verify_quote(dropped, cap_id, sources)
+        check(f"dropped 'not' -> quote_altered (score {v.score:.2f} >= {FUZZY_THRESHOLD})",
+              v.status == "quote_altered" and v.score >= FUZZY_THRESHOLD and not v.ok)
+        contracted = cap_quote.replace("does not", "doesn't")
+        check("'does not' -> 'doesn't' -> supported_fuzzy (negation kept)",
+              verify_quote(contracted, cap_id, sources).status == "supported_fuzzy")
+        typo = cap_quote.replace("negligence", "negligense")
+        check("typo next to a kept 'not' -> supported_fuzzy",
+              verify_quote(typo, cap_id, sources).status == "supported_fuzzy")
+
     # a real quote pointed at the WRONG chunk must fail: citations have to
     # point at the right place, not just somewhere
     check("real quote, wrong source -> quote_not_found",

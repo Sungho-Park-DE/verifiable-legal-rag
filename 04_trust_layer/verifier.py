@@ -21,6 +21,8 @@ That asymmetry — probabilistic generation, deterministic verification —
 is the design idea behind the 2025-26 winning "trust layer" projects.
 """
 
+import re
+from collections import Counter
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 
@@ -28,6 +30,20 @@ from difflib import SequenceMatcher
 # whitespace/OCR-level noise while rejecting real paraphrases — tune it
 # against your own data (verify.py probes both sides of the boundary).
 FUZZY_THRESHOLD = 0.90
+
+# A high similarity score does not mean the same meaning: dropping "not"
+# or changing "30" to "60" costs only a few characters. A fuzzy match
+# therefore also has to keep every number and every negation word of the
+# source span. English only, like the sample contract.
+NEGATIONS = {"not", "no", "never", "neither", "nor", "none", "nothing",
+             "without", "cannot"}
+NUMBER_WORDS = {
+    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
+    "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+    "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "thirty",
+    "forty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred",
+    "thousand", "million",
+}
 
 
 def normalize(text: str) -> str:
@@ -45,7 +61,7 @@ def normalize(text: str) -> str:
 
 @dataclass
 class Verdict:
-    status: str        # supported | supported_fuzzy | quote_not_found | unknown_source
+    status: str        # supported | supported_fuzzy | quote_altered | quote_not_found | unknown_source
     score: float       # 1.0 for exact; best fuzzy ratio otherwise
     best_match: str    # closest span found — shows WHY a check failed
 
@@ -70,6 +86,29 @@ def _best_window(quote: str, source: str) -> tuple[float, str]:
         if ratio > best_ratio:
             best_ratio, best = ratio, window
     return best_ratio, best
+
+
+def _meaning_tokens(text: str) -> Counter:
+    """Numbers and negation words, the cheap edits that flip a meaning."""
+    found = Counter(re.findall(r"\d+(?:[.,]\d+)*", text))
+    for word in re.findall(r"[a-z']+", text.lower()):
+        if word.endswith("n't"):
+            found["not"] += 1
+        elif word in NEGATIONS or word in NUMBER_WORDS:
+            found[word] += 1
+    return found
+
+
+def _whole_words(span: str, source: str) -> str:
+    """Widen a fuzzy window to whole words, so a number or a "not" cut at
+    the window edge is compared in full."""
+    i = source.find(span)
+    j = i + len(span)
+    while i > 0 and not source[i - 1].isspace():
+        i -= 1
+    while j < len(source) and not source[j].isspace():
+        j += 1
+    return source[i:j]
 
 
 def verify_quote(quote: str, source_id: str, sources: dict[str, str]) -> Verdict:
@@ -97,9 +136,14 @@ def verify_quote(quote: str, source_id: str, sources: dict[str, str]) -> Verdict
         return Verdict("supported", 1.0, q)
 
     ratio, best = _best_window(q, s)
-    if ratio >= FUZZY_THRESHOLD:
-        return Verdict("supported_fuzzy", ratio, best)
-    return Verdict("quote_not_found", ratio, best)
+    if ratio < FUZZY_THRESHOLD:
+        return Verdict("quote_not_found", ratio, best)
+    # Close enough in characters — but a changed number or a dropped
+    # negation is a different claim, not noise.
+    span = _whole_words(best, s)
+    if _meaning_tokens(q) != _meaning_tokens(span):
+        return Verdict("quote_altered", ratio, span)
+    return Verdict("supported_fuzzy", ratio, best)
 
 
 if __name__ == "__main__":

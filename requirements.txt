@@ -3,7 +3,7 @@
 #   pymupdf4llm 1.28.0 · chromadb 1.5.9 · anthropic 0.116.0
 #   pydantic 2.13.4 · fpdf2 2.8.7
 # Pinned to exactly these (2026-10-26): with pymupdf4llm 2.0 one retrieval
-# check in 02_rag failed; with these pins all 50 offline checks pass.
+# check in 02_rag failed; with these pins all 55 offline checks pass.
 pymupdf4llm==1.28.0  # PDF -> structured markdown (pulls in pymupdf)
 chromadb==1.5.9      # local vector DB with built-in embedding (no API key needed)
 anthropic==0.116.0   # Claude SDK for structured outputs + tool use

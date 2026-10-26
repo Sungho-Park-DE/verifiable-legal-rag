@@ -62,8 +62,9 @@ Every project ships a `verify.py` whose assertions document what the
 stage guarantees — including adversarial cases found by a fresh-context
 code review: an empty quote that would trivially pass a naive substring
 check (`"" in s` is always `True`), a stitched quote (whole chunk +
-invented sentence) that diluted fuzzy matching past the threshold, and
-paraphrases probing both sides of the similarity boundary. The review
+invented sentence) that diluted fuzzy matching past the threshold,
+paraphrases probing both sides of the similarity boundary, and quotes
+that pass the threshold but change a number or drop a "not". The review
 findings and their fixes are preserved as test cases in
 `04_trust_layer/verify.py`.
 

@@ -32,6 +32,9 @@ Prerequisite: the project-02 index (`02_rag/build_index.py`).
    substring match cannot. Understand `normalize` (what differences are
    never evidence-relevant), the fuzzy window (what noise to tolerate),
    and `FUZZY_THRESHOLD` (where verbatim ends and paraphrase begins).
+   A fuzzy match must also keep every number and negation word of the
+   source span: "does not apply" quoted as "does apply" scores 0.94 but
+   is a different claim, so it comes back as `quote_altered`.
 2. `cited_answer.py` — the schema IS the trust mechanism: a required
    `quote` field described as character-for-character forces the model
    to commit to checkable evidence. Note this file is just 02 + 03 + 4a
@@ -40,7 +43,9 @@ Prerequisite: the project-02 index (`02_rag/build_index.py`).
    table for choosing between hand-built and native (key constraint:
    native citations can't combine with structured outputs — 400).
 4. `verify.py` — the boundary probes are the interesting part: one typo
-   scores 0.98 (passes fuzzy), a paraphrase scores 0.39 (blocked), and
+   scores 0.98 (passes fuzzy), a paraphrase scores 0.39 (blocked), a
+   changed number or a dropped "not" scores above 0.9 and is still
+   blocked, and
    a real quote pointed at the wrong chunk still fails — citations must
    point at the RIGHT place, not just somewhere.
 
